@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BC033FC8249DB4CD00A82704 /* TetrisGameUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC033FC7249DB4CD00A82704 /* TetrisGameUI.swift */; };
 		BC033FCC249DB84A00A82704 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC033FCB249DB84A00A82704 /* CustomColor.swift */; };
+		BC033FCE249DB8EB00A82704 /* TetrisGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC033FCD249DB8EB00A82704 /* TetrisGameView.swift */; };
 		BC598D962499F1F00047B510 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC598D952499F1F00047B510 /* AppDelegate.swift */; };
 		BC598D982499F1F00047B510 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC598D972499F1F00047B510 /* SceneDelegate.swift */; };
 		BC598D9A2499F1F00047B510 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC598D992499F1F00047B510 /* ContentView.swift */; };
@@ -37,6 +38,7 @@
 /* Begin PBXFileReference section */
 		BC033FC7249DB4CD00A82704 /* TetrisGameUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TetrisGameUI.swift; sourceTree = "<group>"; };
 		BC033FCB249DB84A00A82704 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
+		BC033FCD249DB8EB00A82704 /* TetrisGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TetrisGameView.swift; sourceTree = "<group>"; };
 		BC598D922499F1F00047B510 /* Tetris.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tetris.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC598D952499F1F00047B510 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BC598D972499F1F00047B510 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			children = (
 				BC033FC7249DB4CD00A82704 /* TetrisGameUI.swift */,
 				BC033FCB249DB84A00A82704 /* CustomColor.swift */,
+				BC033FCD249DB8EB00A82704 /* TetrisGameView.swift */,
 			);
 			path = GameUI;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC033FC8249DB4CD00A82704 /* TetrisGameUI.swift in Sources */,
+				BC033FCE249DB8EB00A82704 /* TetrisGameView.swift in Sources */,
 				BC598D962499F1F00047B510 /* AppDelegate.swift in Sources */,
 				BC598D982499F1F00047B510 /* SceneDelegate.swift in Sources */,
 				BC033FCC249DB84A00A82704 /* CustomColor.swift in Sources */,
