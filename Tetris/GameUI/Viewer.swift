@@ -1,5 +1,5 @@
 //
-//  TetrisGameView.swift
+//  Viewer.swift
 //  Tetris
 //
 //  Created by Kun Hwi Ko on 6/19/20.
@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct TetrisGameView: View {
-    @ObservedObject var tetris = TetrisGameUI()
+    var tetris = TetrisGameUI()
     
     var body: some View {
         GeometryReader { (geometry: GeometryProxy) in

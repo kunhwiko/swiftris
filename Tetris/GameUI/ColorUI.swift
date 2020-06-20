@@ -1,5 +1,5 @@
 //
-//  CustomColor.swift
+//  ColorUI.swift
 //  Tetris
 //
 //  Created by Kun Hwi Ko on 6/19/20.
@@ -9,5 +9,5 @@
 import SwiftUI
 
 extension Color {
-    public static var tetrisBlack = Color(red:0/255, green:0/255, blue:0/255)
+    public static var customBlack = Color(red:0/255, green:0/255, blue:0/255)
 }
