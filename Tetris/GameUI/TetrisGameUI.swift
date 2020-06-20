@@ -21,6 +21,6 @@ class TetrisGameUI : ObservableObject {
         self.rows = rows
         self.cols = cols
         
-        self.board = Array(repeating: Array(repeating: TetrisBoard(color: Color.black), count: cols), count: rows)
+        self.board = Array(repeating: Array(repeating: TetrisBoard(color: Color.tetrisBlack), count: cols), count: rows)
     }
 }
