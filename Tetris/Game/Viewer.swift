@@ -22,28 +22,20 @@ struct TetrisGameView: View {
                 Spacer()
                     .frame(width:33)
                 GeometryReader { geometry in
-                    self.initGame(grid: geometry.size)
+                    ForEach(0...19, id:\.self) { row in
+                        ForEach(0...9, id:\.self) { col in
+                            Path { path in
+                                let squareSize = geometry.size.height/CGFloat(20)
+                                let x = squareSize * CGFloat(col)
+                                let y = geometry.size.height - squareSize*CGFloat(row+1)
+                                
+                                let rect = CGRect(x: x, y: y, width: squareSize, height: squareSize)
+                                path.addRect(rect)
+                            }
+                            .fill(self.game.board[row][col].color)
+                        }
+                    }
                 }
-            }
-        }
-    }
-    
-    func initGame(grid: CGSize) -> some View {
-        let cols = self.game.cols
-        let rows = self.game.rows
-        let squareSize = grid.height/CGFloat(rows) // read height of the screen and divide by row size
-        let gameBoard = self.game.board
-        
-        return ForEach(0...rows-1, id:\.self) { row in
-            ForEach(0...cols-1, id:\.self) { col in
-                Path { path in
-                    let x = squareSize * CGFloat(col)
-                    let y = grid.height - squareSize*CGFloat(row+1)
-                    
-                    let rect = CGRect(x: x, y: y, width: squareSize, height: squareSize)
-                    path.addRect(rect)
-                }
-                .fill(gameBoard[row][col].color)
             }
         }
     }
