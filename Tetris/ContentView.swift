@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TetrisGameView()
-            .background(Color.customBackground)
+            .background(Color.white)
     }
 }
 

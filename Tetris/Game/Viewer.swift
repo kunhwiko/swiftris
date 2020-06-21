@@ -9,40 +9,41 @@
 import SwiftUI
 
 struct TetrisGameView: View {
-    var tetrisGame = GameUI()
+    var game = GameUI()
     
     var body: some View {
         VStack{
-            Text("")
+            Spacer()
             Text("Swiftris by Kun Hwi Ko")
                 .foregroundColor(Color.black)
                 .font(.custom("Georgia",size:13))
                 .font(.subheadline)
-            GeometryReader { (geometry: GeometryProxy) in
-                self.drawBoard(boundingRect: geometry.size)
+            HStack{
+                Spacer()
+                    .frame(width:33)
+                GeometryReader { geometry in
+                    self.initGame(grid: geometry.size)
+                }
             }
-            .background(Color.customBackground)
         }
     }
     
-    func drawBoard(boundingRect: CGSize) -> some View {
-        let columns = self.tetrisGame.cols
-        let rows = self.tetrisGame.rows
-        let blocksize = min(boundingRect.width/CGFloat(columns), boundingRect.height/CGFloat(rows))
-        let xoffset = (boundingRect.width - blocksize*CGFloat(columns))/2
-        let yoffset = (boundingRect.height - blocksize*CGFloat(rows))/2
-        let gameBoard = self.tetrisGame.board
+    func initGame(grid: CGSize) -> some View {
+        let cols = self.game.cols
+        let rows = self.game.rows
+        let squareSize = grid.height/CGFloat(rows) // read height of the screen and divide by row size
+        let gameBoard = self.game.board
         
-        return ForEach(0...columns-1, id:\.self) { (column:Int) in
-            ForEach(0...rows-1, id:\.self) { (row:Int) in
+        return ForEach(0...rows-1, id:\.self) { row in
+            ForEach(0...cols-1, id:\.self) { col in
                 Path { path in
-                    let x = xoffset + blocksize * CGFloat(column)
-                    let y = boundingRect.height - yoffset - blocksize*CGFloat(row+1)
+                    let x = squareSize * CGFloat(col)
+                    let y = grid.height - squareSize*CGFloat(row+1)
                     
-                    let rect = CGRect(x: x, y: y, width: blocksize, height: blocksize)
+                    let rect = CGRect(x: x, y: y, width: squareSize, height: squareSize)
                     path.addRect(rect)
                 }
-                .fill(gameBoard[row][column].color)
+                .fill(gameBoard[row][col].color)
             }
         }
     }

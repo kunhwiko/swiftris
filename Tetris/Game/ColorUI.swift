@@ -9,6 +9,5 @@
 import SwiftUI
 
 extension Color {
-    public static var customBackground = Color(red:255/255, green:255/255, blue:255/255)
     public static var customBoardColor = Color(red:70/255, green:70/255, blue:70/255)
 }

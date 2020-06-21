@@ -17,7 +17,7 @@ class GameUI {
     var cols: Int
     var board: [[Square]]
     
-    // Tetris board is a 20x10 board 
+    // Initialize the board as 20x10 of "Square"s
     init(rows: Int = 20, cols: Int = 10) {
         self.rows = rows
         self.cols = cols
