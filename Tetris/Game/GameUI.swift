@@ -10,6 +10,7 @@ import SwiftUI
 
 struct Square {
     var color : Color
+    var border : Color
 }
 
 class GameUI {
@@ -26,7 +27,7 @@ class GameUI {
         for _ in 0...rows{
             var rowSquares = [Square]()
             for _ in 0...cols{
-                rowSquares.append(Square(color : Color.customBoardColor))
+                rowSquares.append(Square(color : Color.customBoardColor, border : Color.white))
             }
             self.board.append(rowSquares)
         }

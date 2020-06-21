@@ -21,21 +21,48 @@ struct TetrisGameView: View {
             HStack{
                 Spacer()
                     .frame(width:33)
-                GeometryReader { geometry in
-                    ForEach(0...19, id:\.self) { row in
-                        ForEach(0...9, id:\.self) { col in
-                            Path { path in
-                                let squareSize = geometry.size.height/CGFloat(20)
-                                let x = squareSize * CGFloat(col)
-                                let y = geometry.size.height - squareSize*CGFloat(row+1)
-                                
-                                let rect = CGRect(x: x, y: y, width: squareSize, height: squareSize)
-                                path.addRect(rect)
-                            }
-                            .fill(self.game.board[row][col].color)
-                        }
+                ZStack{
+                    GeometryReader { geometry in
+                        self.fillGrid(square:geometry.size)
+                    }
+                    GeometryReader { geometry in
+                        self.fillStroke(square:geometry.size)
                     }
                 }
+            }
+        }
+    }
+    
+    // fill the grid with a specific color
+    func fillGrid(square:CGSize) -> some View{
+        ForEach(0...19, id:\.self) { row in
+            ForEach(0...9, id:\.self) { col in
+                Path { path in
+                    let squareSize = square.height/20
+                    let xPos = squareSize * CGFloat(col)
+                    let yPos = squareSize * CGFloat(row)
+                    
+                    let rect = CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize)
+                    path.addRect(rect)
+                }
+                .fill(Color.customBoardColor)
+            }
+        }
+    }
+    
+    // create dividers for the squares in the grid
+    func fillStroke(square:CGSize) -> some View{
+        ForEach(0...19, id:\.self) { row in
+            ForEach(0...9, id:\.self) { col in
+                Path { path in
+                    let squareSize = square.height/20
+                    let xPos = squareSize * CGFloat(col)
+                    let yPos = squareSize * CGFloat(row)
+                    
+                    let rect = CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize)
+                    path.addRect(rect)
+                }
+                .stroke(Color.customLineColor)
             }
         }
     }
