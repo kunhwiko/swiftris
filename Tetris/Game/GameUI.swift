@@ -13,13 +13,13 @@ struct Square {
 }
 
 class GameUI {
-    var rows : Int
-    var cols : Int
-    var board : [[Square]]
+    var rows: Int
+    var cols: Int
+    var board: [[Square]]
     
     // standard Tetris board is 20x10
     // allow 4 more rows for blocks to drop down
-    init(rows:Int = 24, cols:Int = 10){
+    init(rows: Int = 24, cols: Int = 10) {
         self.rows = rows
         self.cols = cols
         
