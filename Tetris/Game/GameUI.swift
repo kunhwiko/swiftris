@@ -17,9 +17,8 @@ class GameUI {
     var cols: Int
     var board: [[Square]]
     
-    // standard Tetris board is 20x10
-    // allow 4 more rows for blocks to drop down
-    init(rows: Int = 24, cols: Int = 10) {
+    // Tetris board is a 20x10 board 
+    init(rows: Int = 20, cols: Int = 10) {
         self.rows = rows
         self.cols = cols
         
@@ -27,7 +26,7 @@ class GameUI {
         for _ in 0...rows{
             var rowSquares = [Square]()
             for _ in 0...cols{
-                rowSquares.append(Square(color : Color.customBlack))
+                rowSquares.append(Square(color : Color.customBoardColor))
             }
             self.board.append(rowSquares)
         }

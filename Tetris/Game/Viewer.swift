@@ -13,22 +13,15 @@ struct TetrisGameView: View {
     
     var body: some View {
         VStack{
-            HStack{
-                GeometryReader { geometry in
-                    Text("SWIFTRIS")
-                        .frame(width:geometry.size.width,height:40)
-                        .foregroundColor(Color.white)
-                        .background(Color.blue)
-                }
+            Text("")
+            Text("Swiftris by Kun Hwi Ko")
+                .foregroundColor(Color.black)
+                .font(.custom("Georgia",size:13))
+                .font(.subheadline)
+            GeometryReader { (geometry: GeometryProxy) in
+                self.drawBoard(boundingRect: geometry.size)
             }
-            Divider()
-            Spacer()
-            HStack{
-                GeometryReader { (geometry: GeometryProxy) in
-                    self.drawBoard(boundingRect: geometry.size)
-                }
-            }
-
+            .background(Color.customBackground)
         }
     }
     
