@@ -12,23 +12,19 @@ struct Block {
     var blockType : String 
 }
 
-
-struct BlockLocation {
+struct BlockPosition {
     var row:Int
     var column:Int
 }
 
-
 struct TetrisPieces {
-    var origin : BlockLocation
+    var startPos: BlockPosition
     var blockType : String
-    var blocks : [BlockLocation] {
-        return TetrisPieces.getBlocks(blockType: blockType)
-    }
+    var blocks : [BlockPosition] {return TetrisPieces.getBlocks(blockType: blockType)}
     
-    func moveBy(row:Int, column:Int) -> TetrisPieces{
-        let newOrigin = BlockLocation(row:origin.row+row, column:origin.column+column)
-        return TetrisPieces(origin:newOrigin, blockType: blockType)
+    func move(row:Int, column:Int) -> TetrisPieces{
+        let newPos = BlockPosition(row:startPos.row+row, column:startPos.column+column)
+        return TetrisPieces(startPos:newPos, blockType: blockType)
     }
     
     static func getRandomBlock() -> String{
@@ -36,68 +32,68 @@ struct TetrisPieces {
         return type.randomElement()!
     }
     
-    static func getBlocks(blockType: String) -> [BlockLocation] {
+    static func getBlocks(blockType: String) -> [BlockPosition] {
         switch blockType {
         case "I":
             return
                 [
-                    BlockLocation(row:0, column:-1),BlockLocation(row:0, column:0),
-                    BlockLocation(row:0, column:1), BlockLocation(row:0, column:2)
+                    BlockPosition(row:0, column:-1),BlockPosition(row:0, column:0),
+                    BlockPosition(row:0, column:1), BlockPosition(row:0, column:2)
                 ]
         case "O":
             return
                 [
-                    BlockLocation(row:0, column:0),BlockLocation(row:0, column:1),
-                    BlockLocation(row:1, column:1), BlockLocation(row:1, column:0)
+                    BlockPosition(row:0, column:0),BlockPosition(row:0, column:1),
+                    BlockPosition(row:1, column:1), BlockPosition(row:1, column:0)
                 ]
         case "T":
             return
                 [
-                    BlockLocation(row:0, column:-1),BlockLocation(row:0, column:0),
-                    BlockLocation(row:0, column:1), BlockLocation(row:1, column:0)
+                    BlockPosition(row:0, column:-1),BlockPosition(row:0, column:0),
+                    BlockPosition(row:0, column:1), BlockPosition(row:1, column:0)
                 ]
         case "S":
             return
                 [
-                    BlockLocation(row:0, column:-1),BlockLocation(row:0, column:0),
-                    BlockLocation(row:1, column:0), BlockLocation(row:1, column:1)
+                    BlockPosition(row:0, column:-1),BlockPosition(row:0, column:0),
+                    BlockPosition(row:1, column:0), BlockPosition(row:1, column:1)
                 ]
         case "Z":
             return
                 [
-                    BlockLocation(row:-1, column:0),BlockLocation(row:0, column:0),
-                    BlockLocation(row:0, column:-1), BlockLocation(row:-1, column:1)
+                    BlockPosition(row:-1, column:0),BlockPosition(row:0, column:0),
+                    BlockPosition(row:0, column:-1), BlockPosition(row:-1, column:1)
                 ]
         case "J":
             return
                 [
-                    BlockLocation(row:1, column:-1),BlockLocation(row:0, column:-1),
-                    BlockLocation(row:0, column:0), BlockLocation(row:0, column:1)
+                    BlockPosition(row:1, column:-1),BlockPosition(row:0, column:-1),
+                    BlockPosition(row:0, column:0), BlockPosition(row:0, column:1)
                 ]
         case "L":
             return
                 [
-                    BlockLocation(row:0, column:-1),BlockLocation(row:0, column:0),
-                    BlockLocation(row:0, column:1), BlockLocation(row:1, column:1)
+                    BlockPosition(row:0, column:-1),BlockPosition(row:0, column:0),
+                    BlockPosition(row:0, column:1), BlockPosition(row:1, column:1)
                 ]
         default:
             return
                 [
-                    BlockLocation(row:0, column:0),BlockLocation(row:0, column:0),
-                    BlockLocation(row:0, column:0), BlockLocation(row:0, column:0)
+                    BlockPosition(row:0, column:0),BlockPosition(row:0, column:0),
+                    BlockPosition(row:0, column:0), BlockPosition(row:0, column:0)
                 ]
         }
     }
     
-    static func createNewTetromino(numRows: Int, numColumns: Int) -> TetrisPieces {
+    static func createNewPiece(row: Int, column: Int) -> TetrisPieces {
         let blockType = getRandomBlock()
+        var origin:BlockPosition
         
-        var maxRow = 0
-        for block in getBlocks(blockType: blockType) {
-            maxRow = max(maxRow, block.row)
+        if blockType == "Z" || blockType == "I" {
+            origin = BlockPosition(row: row-1, column: (column-1)/2)
+        } else {
+            origin = BlockPosition(row: row-2, column: (column-1)/2)
         }
-        
-        let origin = BlockLocation(row: numRows - 1 - maxRow, column: (numColumns-1)/2)
-        return TetrisPieces(origin: origin, blockType: blockType)
+        return TetrisPieces(startPos: origin, blockType: blockType)
     }
 }

@@ -14,15 +14,15 @@ struct Square {
 }
 
 class GameUI: ObservableObject {
-    @Published var tetrisGameModel = GameModel()
-    var rows: Int {tetrisGameModel.rows}
-    var cols: Int {tetrisGameModel.cols}
+    @Published var model = GameModel()
+    var rows: Int {model.rows}
+    var cols: Int {model.cols}
     var board: [[Square]] {
-        var board = tetrisGameModel.grid.map {$0.map(convertToSquare)}
+        var board = model.grid.map {$0.map(convertToSquare)}
         
-        if let tetromino = tetrisGameModel.tetromino {
+        if let tetromino = model.tetromino {
             for blockLocation in tetromino.blocks {
-                board[blockLocation.row + tetromino.origin.row][blockLocation.column + tetromino.origin.column]
+                board[blockLocation.row + tetromino.startPos.row][blockLocation.column + tetromino.startPos.column]
                     = Square(color:getColor(blockType:tetromino.blockType))
             }
         }
@@ -32,7 +32,7 @@ class GameUI: ObservableObject {
     var anyCancellable : AnyCancellable?
     
     init(){
-        anyCancellable = tetrisGameModel.objectWillChange.sink {
+        anyCancellable = model.objectWillChange.sink {
             self.objectWillChange.send()
         }
     }
@@ -58,7 +58,7 @@ class GameUI: ObservableObject {
         case "L":
             return .orange
         default:
-            return .black
+            return .customBoardColor
         }
     }
 }

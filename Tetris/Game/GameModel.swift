@@ -24,7 +24,7 @@ class GameModel : ObservableObject {
         self.cols = cols
         
         grid = Array(repeating: Array(repeating: nil, count: cols), count:rows)
-        tetromino = TetrisPieces(origin: BlockLocation(row:19, column:4),blockType: "I")
+        tetromino = TetrisPieces(startPos: BlockPosition(row:19, column:4),blockType: "I")
         speed = 0.1
         resumeGame()
     }
@@ -36,14 +36,14 @@ class GameModel : ObservableObject {
     
     func runEngine(timer: Timer){
         guard let currentTetromino = tetromino else{
-            tetromino = TetrisPieces.createNewTetromino(numRows: rows, numColumns: cols)
+            tetromino = TetrisPieces.createNewPiece(row: rows, column: cols)
             if !isValidTetromino(testTetromino:tetromino!){
                 timer.invalidate()
             }
             return
         }
         
-        let newTetromino = currentTetromino.moveBy(row: -1, column: 0)
+        let newTetromino = currentTetromino.move(row: -1, column: 0)
         if isValidTetromino(testTetromino: newTetromino) {
             tetromino = newTetromino
             return
@@ -53,10 +53,10 @@ class GameModel : ObservableObject {
     
     func isValidTetromino(testTetromino: TetrisPieces) -> Bool {
         for block in testTetromino.blocks {
-            let row = testTetromino.origin.row + block.row
+            let row = testTetromino.startPos.row + block.row
             if row < 0 || row >= rows { return false }
             
-            let column = testTetromino.origin.column + block.column
+            let column = testTetromino.startPos.column + block.column
             if column < 0 || column >= cols { return false }
             
             if grid[row][column] != nil { return false }
@@ -70,10 +70,10 @@ class GameModel : ObservableObject {
         }
         
         for block in currentTetromino.blocks {
-            let row = currentTetromino.origin.row + block.row
+            let row = currentTetromino.startPos.row + block.row
             if row < 0 || row >= rows { continue }
             
-            let column = currentTetromino.origin.column + block.column
+            let column = currentTetromino.startPos.column + block.column
             if column < 0 || column >= cols { continue }
             
             grid[row][column] = Block(blockType: currentTetromino.blockType)
