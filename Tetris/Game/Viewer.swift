@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct Viewer: View {
-    @ObservedObject var game = GameUI()
+    @ObservedObject var game = GameUI()  // Use observedobject to notify that GameUI is being observed for changes
     
     var body: some View {
         VStack{
@@ -42,7 +42,7 @@ struct Viewer: View {
                 Path { path in
                     let squareSize = square.height/20
                     let xPos = squareSize * CGFloat(col)
-                    let yPos = squareSize*CGFloat(row)
+                    let yPos = squareSize * CGFloat(row)
                     
                     let rect = CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize)
                     path.addRect(rect)

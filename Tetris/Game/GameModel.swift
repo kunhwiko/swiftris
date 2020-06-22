@@ -8,14 +8,15 @@
 
 import SwiftUI
 
+// Use observableobject to notify to viewer that changes must be made 
 class GameModel : ObservableObject {
     var rows: Int
     var cols: Int
     
     var timer : Timer?
-    var speed : Double
     
-    @Published var grid: [[Block?]]
+    // this grid is used to set blocks on the tetris board 
+    @Published var grid: [[Block?]] // Use published to get the latest updated value 
     @Published var tetrisBlock: TetrisPieces?
     
     // Initialize the board as 20x10 of "Square"s
@@ -24,61 +25,61 @@ class GameModel : ObservableObject {
         self.cols = cols
         
         grid = Array(repeating: Array(repeating: nil, count: cols), count:rows)
-        tetrisBlock = TetrisPieces(startPos: BlockPosition(row:0, column:4),blockType: "I")
-        speed = 0.1
-        resumeGame()
+        tetrisBlock = TetrisPieces.createNewPiece(row: 0, column: cols)
+        startGame()
     }
     
-    func resumeGame() {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: speed, repeats: true, block: runEngine)
+    func startGame() {
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: runGame)
     }
     
-    func runEngine(timer: Timer){
-        guard let currentTetromino = tetrisBlock else{
+    func runGame(timer: Timer){
+        // guard allows us to set currPiece to tetrisBlock unless tetrisBlock is nil
+        // if tetrisBlock is nil, end the program
+        guard let currPiece = tetrisBlock else{
             tetrisBlock = TetrisPieces.createNewPiece(row: 0, column: cols)
-            if !isValidTetromino(testTetromino:tetrisBlock!){
+            if isValid(test:tetrisBlock!) == false {
                 timer.invalidate()
             }
             return
         }
         
-        let newTetromino = currentTetromino.move(row: 1, column: 0)
-        if isValidTetromino(testTetromino: newTetromino) {
-            tetrisBlock = newTetromino
+        let movePiece = currPiece.move(row: 1, column: 0)
+        if isValid(test: movePiece) {
+            tetrisBlock = movePiece
             return
         }
-        placeTetromino()
+        isPlaced()
     }
     
-    func isValidTetromino(testTetromino: TetrisPieces) -> Bool {
-        for block in testTetromino.blocks {
-            let row = testTetromino.startPos.row + block.row
-            if row < 0 || row >= rows { return false }
-            
-            let column = testTetromino.startPos.column + block.column
-            if column < 0 || column >= cols { return false }
-            
-            if grid[row][column] != nil { return false }
+    func isValid(test: TetrisPieces) -> Bool {
+        for block in test.blocks {
+            let row = test.startPos.row + block.row
+            let column = test.startPos.column + block.column
+            if row < 0 || row >= rows || column < 0 || column >= cols || grid[row][column] != nil {
+                return false
+            }
         }
         return true
     }
     
-    func placeTetromino() {
-        guard let currentTetromino = tetrisBlock else {
+    func isPlaced() {
+        // without using guard statement 
+        var currPiece : TetrisPieces
+        if tetrisBlock != nil {
+            currPiece = tetrisBlock!
+        } else {
             return
         }
-        
-        for block in currentTetromino.blocks {
-            let row = currentTetromino.startPos.row + block.row
-            if row < 0 || row >= rows { continue }
-            
-            let column = currentTetromino.startPos.column + block.column
-            if column < 0 || column >= cols { continue }
-            
-            grid[row][column] = Block(blockType: currentTetromino.blockType)
+
+        for block in currPiece.blocks {
+            let row = currPiece.startPos.row + block.row
+            let column = currPiece.startPos.column + block.column
+            if row < 0 || row >= rows || column < 0 || column >= cols {
+                continue
+            }
+            grid[row][column] = Block(blockType : currPiece.blockType)
         }
-        
         tetrisBlock = nil
     }
 }

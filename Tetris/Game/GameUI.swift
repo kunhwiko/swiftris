@@ -17,6 +17,8 @@ class GameUI: ObservableObject {
     @Published var model = GameModel()
     var rows: Int {model.rows}
     var cols: Int {model.cols}
+    
+    // this board is used to set colors on the tetris board 
     var board: [[Square]] {
         var board = model.grid.map {$0.map(convertToSquare)}
         
@@ -29,8 +31,8 @@ class GameUI: ObservableObject {
         return board
     }
     
+    // automatically notify for changes and update 
     var anyCancellable : AnyCancellable?
-    
     init(){
         anyCancellable = model.objectWillChange.sink {
             self.objectWillChange.send()
