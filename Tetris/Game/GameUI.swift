@@ -1,35 +1,65 @@
 //
-//  GameUI.swift
+//  TetrisGameViewModel.swift
 //  Tetris
 //
-//  Created by Kun Hwi Ko on 6/19/20.
+//  Created by Kun Hwi Ko on 6/21/20.
 //  Copyright © 2020 Kun Hwi Ko. All rights reserved.
 //
 
 import SwiftUI
+import Combine
 
 struct Square {
     var color : Color
-    var border : Color
 }
 
-class GameUI {
-    var rows: Int
-    var cols: Int
-    var board: [[Square]]
-    
-    // Initialize the board as 20x10 of "Square"s
-    init(rows: Int = 20, cols: Int = 10) {
-        self.rows = rows
-        self.cols = cols
+class GameUI: ObservableObject {
+    @Published var tetrisGameModel = GameModel()
+    var rows: Int {tetrisGameModel.rows}
+    var cols: Int {tetrisGameModel.cols}
+    var board: [[Square]] {
+        var board = tetrisGameModel.grid.map {$0.map(convertToSquare)}
         
-        self.board = [[Square]]()
-        for _ in 0...rows{
-            var rowSquares = [Square]()
-            for _ in 0...cols{
-                rowSquares.append(Square(color : Color.customBoardColor, border : Color.white))
+        if let tetromino = tetrisGameModel.tetromino {
+            for blockLocation in tetromino.blocks {
+                board[blockLocation.row + tetromino.origin.row][blockLocation.column + tetromino.origin.column]
+                    = Square(color:getColor(blockType:tetromino.blockType))
             }
-            self.board.append(rowSquares)
+        }
+        return board
+    }
+    
+    var anyCancellable : AnyCancellable?
+    
+    init(){
+        anyCancellable = tetrisGameModel.objectWillChange.sink {
+            self.objectWillChange.send()
+        }
+    }
+
+    func convertToSquare(block:Block?) -> Square {
+        return Square(color: getColor(blockType: block?.blockType))
+    }
+    
+    func getColor(blockType: String?) -> Color {
+        switch blockType {
+        case "I":
+            return .customCyan
+        case "O":
+            return .yellow
+        case "T":
+            return .purple
+        case "S":
+            return .green
+        case "Z":
+            return .red
+        case "J":
+            return .blue
+        case "L":
+            return .orange
+        default:
+            return .black
         }
     }
 }
+

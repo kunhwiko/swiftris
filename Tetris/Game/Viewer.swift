@@ -1,15 +1,15 @@
 //
-//  Viewer.swift
+//  TetrisGameView.swift
 //  Tetris
 //
-//  Created by Kun Hwi Ko on 6/20/20.
+//  Created by Kun Hwi Ko on 6/21/20.
 //  Copyright © 2020 Kun Hwi Ko. All rights reserved.
 //
 
 import SwiftUI
 
-struct TetrisGameView: View {
-    var game = GameUI()
+struct Viewer: View {
+    @ObservedObject var game = GameUI()
     
     var body: some View {
         VStack{
@@ -35,17 +35,19 @@ struct TetrisGameView: View {
     
     // fill the grid with a specific color
     func fillGrid(square:CGSize) -> some View{
-        ForEach(0...19, id:\.self) { row in
+        let gameBoard = self.game.board
+        
+        return ForEach(0...19, id:\.self) { row in
             ForEach(0...9, id:\.self) { col in
                 Path { path in
                     let squareSize = square.height/20
                     let xPos = squareSize * CGFloat(col)
-                    let yPos = squareSize * CGFloat(row)
+                    let yPos = square.height - squareSize*CGFloat(row+1)
                     
                     let rect = CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize)
                     path.addRect(rect)
                 }
-                .fill(Color.customBoardColor)
+                .fill(gameBoard[row][col].color)
             }
         }
     }
@@ -68,8 +70,8 @@ struct TetrisGameView: View {
     }
 }
 
-struct TetrisGameView_Previews: PreviewProvider {
+struct Viewer_Previews: PreviewProvider {
     static var previews: some View {
-        TetrisGameView()
+        Viewer()
     }
 }
