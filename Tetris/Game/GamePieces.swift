@@ -8,8 +8,10 @@
 
 import SwiftUI
 
+// Block is a single square of a tetris piece
 struct Block {
-    var blockType : String 
+    var blockType : String
+    var color : Color 
 }
 
 struct BlockPosition {
@@ -17,17 +19,20 @@ struct BlockPosition {
     var column:Int
 }
 
-struct TetrisPieces {
+// TetrisPiece is an entire tetromino made of 4 blocks 
+struct TetrisPiece {
     var startPos: BlockPosition
     var blockType : String
-    var blocks : [BlockPosition] {return TetrisPieces.getBlocks(blockType: blockType)}
+    var color : Color {return TetrisPiece.getColors(blockType: blockType)}
+    var blocks : [BlockPosition] {return TetrisPiece.getBlocks(blockType: blockType)}
     
-    func move(row:Int, column:Int) -> TetrisPieces{
+    func move(row:Int, column:Int) -> TetrisPiece{
         let newPos = BlockPosition(row:startPos.row+row, column:startPos.column+column)
-        return TetrisPieces(startPos:newPos, blockType: blockType)
+        return TetrisPiece(startPos:newPos, blockType: blockType)
     }
     
-    static func getRandomBlock() -> String{
+    // we make these functions 'functions of the struct' and not 'functions of an instance of struct'
+    static func getRandomType() -> String{
         let type = ["I","O","T","S","Z","J","L"]
         return type.randomElement()!
     }
@@ -85,8 +90,29 @@ struct TetrisPieces {
         }
     }
     
-    static func createNewPiece(row: Int, column: Int) -> TetrisPieces {
-        let blockType = getRandomBlock()
+    static func getColors(blockType: String) -> Color {
+        switch blockType {
+        case "I":
+            return .customCyan 
+        case "O":
+            return .yellow
+        case "T":
+            return .purple 
+        case "S":
+            return .green 
+        case "Z":
+            return .red
+        case "J":
+            return .blue
+        case "L":
+            return .orange
+        default:
+            return .customBoardColor
+        }
+    }
+    
+    static func createNewPiece(row: Int, column: Int) -> TetrisPiece {
+        let blockType = getRandomType()
         var origin:BlockPosition
         
         if blockType == "Z" {
@@ -94,6 +120,6 @@ struct TetrisPieces {
         } else {
             origin = BlockPosition(row: 0, column: (column-1)/2)
         }
-        return TetrisPieces(startPos: origin, blockType: blockType)
+        return TetrisPiece(startPos: origin, blockType: blockType)
     }
 }

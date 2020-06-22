@@ -1,5 +1,5 @@
 //
-//  TetrisGameView.swift
+//  Viewer.swift
 //  Tetris
 //
 //  Created by Kun Hwi Ko on 6/21/20.
@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct Viewer: View {
-    @ObservedObject var game = GameUI()  // Use observedobject to notify that GameUI is being observed for changes
+    @ObservedObject var game = GameModel()  // Use observedobject to notify that GameUI is being observed for changes
     
     var body: some View {
         VStack{
@@ -52,7 +52,7 @@ struct Viewer: View {
         }
     }
     
-    // create dividers for the squares in the grid
+    // create dividers in the grid
     func fillStroke(square:CGSize) -> some View{
         ForEach(0...19, id:\.self) { row in
             ForEach(0...9, id:\.self) { col in
