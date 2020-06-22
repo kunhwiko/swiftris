@@ -89,10 +89,10 @@ struct TetrisPieces {
         let blockType = getRandomBlock()
         var origin:BlockPosition
         
-        if blockType == "Z" || blockType == "I" {
-            origin = BlockPosition(row: row-1, column: (column-1)/2)
+        if blockType == "Z" {
+            origin = BlockPosition(row: 1, column: (column-1)/2)
         } else {
-            origin = BlockPosition(row: row-2, column: (column-1)/2)
+            origin = BlockPosition(row: 0, column: (column-1)/2)
         }
         return TetrisPieces(startPos: origin, blockType: blockType)
     }

@@ -20,7 +20,7 @@ class GameUI: ObservableObject {
     var board: [[Square]] {
         var board = model.grid.map {$0.map(convertToSquare)}
         
-        if let tetromino = model.tetromino {
+        if let tetromino = model.tetrisBlock {
             for blockLocation in tetromino.blocks {
                 board[blockLocation.row + tetromino.startPos.row][blockLocation.column + tetromino.startPos.column]
                     = Square(color:getColor(blockType:tetromino.blockType))

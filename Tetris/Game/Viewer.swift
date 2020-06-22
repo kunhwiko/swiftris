@@ -42,7 +42,7 @@ struct Viewer: View {
                 Path { path in
                     let squareSize = square.height/20
                     let xPos = squareSize * CGFloat(col)
-                    let yPos = square.height - squareSize*CGFloat(row+1)
+                    let yPos = squareSize*CGFloat(row)
                     
                     let rect = CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize)
                     path.addRect(rect)

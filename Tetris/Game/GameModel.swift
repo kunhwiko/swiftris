@@ -16,7 +16,7 @@ class GameModel : ObservableObject {
     var speed : Double
     
     @Published var grid: [[Block?]]
-    @Published var tetromino: TetrisPieces?
+    @Published var tetrisBlock: TetrisPieces?
     
     // Initialize the board as 20x10 of "Square"s
     init(rows: Int = 20, cols: Int = 10) {
@@ -24,7 +24,7 @@ class GameModel : ObservableObject {
         self.cols = cols
         
         grid = Array(repeating: Array(repeating: nil, count: cols), count:rows)
-        tetromino = TetrisPieces(startPos: BlockPosition(row:19, column:4),blockType: "I")
+        tetrisBlock = TetrisPieces(startPos: BlockPosition(row:0, column:4),blockType: "I")
         speed = 0.1
         resumeGame()
     }
@@ -35,17 +35,17 @@ class GameModel : ObservableObject {
     }
     
     func runEngine(timer: Timer){
-        guard let currentTetromino = tetromino else{
-            tetromino = TetrisPieces.createNewPiece(row: rows, column: cols)
-            if !isValidTetromino(testTetromino:tetromino!){
+        guard let currentTetromino = tetrisBlock else{
+            tetrisBlock = TetrisPieces.createNewPiece(row: 0, column: cols)
+            if !isValidTetromino(testTetromino:tetrisBlock!){
                 timer.invalidate()
             }
             return
         }
         
-        let newTetromino = currentTetromino.move(row: -1, column: 0)
+        let newTetromino = currentTetromino.move(row: 1, column: 0)
         if isValidTetromino(testTetromino: newTetromino) {
-            tetromino = newTetromino
+            tetrisBlock = newTetromino
             return
         }
         placeTetromino()
@@ -65,7 +65,7 @@ class GameModel : ObservableObject {
     }
     
     func placeTetromino() {
-        guard let currentTetromino = tetromino else {
+        guard let currentTetromino = tetrisBlock else {
             return
         }
         
@@ -79,7 +79,7 @@ class GameModel : ObservableObject {
             grid[row][column] = Block(blockType: currentTetromino.blockType)
         }
         
-        tetromino = nil
+        tetrisBlock = nil
     }
 }
 
