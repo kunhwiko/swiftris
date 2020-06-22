@@ -15,18 +15,18 @@ class GameModel : ObservableObject {
     
     var timer : Timer?
     
-    // grid is a 20x10 tetris board that will fill with nil or blocks 
+    // grid is a 20x10 tetris board that will fill with blocks 
     // Use published to get the latest updated value
     // TetrisPiece might be nil, so we use optionals
     @Published var grid: [[Block]]
     @Published var piece: TetrisPiece?
-    var board: [[Square]] {
-        var board = grid.map {$0.map(convertToSquare)}
+    var board: [[Block]] {
+        var board = grid
         
-        if let tetromino = piece {
-            for blockLocation in tetromino.blocks {
-                board[blockLocation.row + tetromino.startPos.row][blockLocation.column + tetromino.startPos.column]
-                    = Square(color:getColor(blockType:tetromino.blockType))
+        if piece != nil {
+            for blockLocation in piece!.blocks {
+                board[blockLocation.row + piece!.startPos.row][blockLocation.column + piece!.startPos.column]
+                    = Block(blockType:piece!.blockType, color:piece!.color)
             }
         }
         return board
@@ -93,35 +93,6 @@ class GameModel : ObservableObject {
             grid[row][column] = Block(blockType : currPiece.blockType, color: currPiece.color)
         }
         piece = nil
-    }
-    
-    func convertToSquare(block:Block?) -> Square {
-        return Square(color: getColor(blockType: block?.blockType))
-    }
-    
-    func getColor(blockType: String?) -> Color {
-        switch blockType {
-        case "I":
-            return .customCyan
-        case "O":
-            return .yellow
-        case "T":
-            return .purple
-        case "S":
-            return .green
-        case "Z":
-            return .red
-        case "J":
-            return .blue
-        case "L":
-            return .orange
-        default:
-            return .customBoardColor
-        }
-    }
-    
-    struct Square {
-        var color : Color
     }
 }
 
