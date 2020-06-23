@@ -22,11 +22,24 @@ struct Viewer: View {
                 Spacer()
                     .frame(width:33)
                 ZStack{
+                    // tap left side to rotate counterclockwise
                     GeometryReader { geometry in
-                        self.fillGrid(square:geometry.size)
+                        self.fillLeftGrid(square:geometry.size)
                     }
                     .gesture(game.getMouseGesture())
-                    .gesture(game.getTapGesture())
+                    .onTapGesture {
+                        self.game.rotatePiece(clockwise: false)
+                    }
+                        
+                    // tap right side to rotate clockwise
+                    GeometryReader { geometry in
+                        self.fillRightGrid(square:geometry.size)
+                    }
+                    .gesture(game.getMouseGesture())
+                    .onTapGesture {
+                        self.game.rotatePiece(clockwise: true)
+                    }
+
                     GeometryReader { geometry in
                         self.fillStroke(square:geometry.size)
                     }
@@ -36,11 +49,30 @@ struct Viewer: View {
     }
     
     // fill the grid with a specific color
-    func fillGrid(square:CGSize) -> some View{
+    func fillLeftGrid(square:CGSize) -> some View{
         let gameBoard = self.game.board
         
         return ForEach(0...19, id:\.self) { row in
-            ForEach(0...9, id:\.self) { col in
+            ForEach(0...4, id:\.self) { col in
+                Path { path in
+                    let squareSize = square.height/20
+                    let xPos = squareSize * CGFloat(col)
+                    let yPos = squareSize * CGFloat(row)
+                    
+                    let rect = CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize)
+                    path.addRect(rect)
+                }
+                .fill(gameBoard[row][col].color)
+            }
+        }
+    }
+    
+    // fill the grid with a specific color
+    func fillRightGrid(square:CGSize) -> some View{
+        let gameBoard = self.game.board
+        
+        return ForEach(0...19, id:\.self) { row in
+            ForEach(5...9, id:\.self) { col in
                 Path { path in
                     let squareSize = square.height/20
                     let xPos = squareSize * CGFloat(col)

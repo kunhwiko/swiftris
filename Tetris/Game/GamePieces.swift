@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-// Block is a single square of a tetris piece
+// Block is a single square that makes up a tetris piece
 struct Block {
     var blockType : String
     var color : Color
@@ -19,7 +19,7 @@ struct BlockPosition {
     var column:Int
 }
 
-// TetrisPiece is an entire tetromino made of 4 blocks
+// TetrisPiece is an entire tetromino made up of 4 blocks
 struct TetrisPiece {
     var startPos: BlockPosition
     var blockType : String
@@ -36,7 +36,7 @@ struct TetrisPiece {
         return TetrisPiece(startPos: startPos, blockType: blockType, rotation: rotation + (clockwise ? 1: -1))
     }
     
-    // we make these functions 'functions of the struct' and not 'functions of an instance of struct'
+    // we make the following functions 'functions of the struct' and not 'functions of an instance of struct'
     static func getRandomType() -> String{
         let type = ["I","O","T","S","Z","J","L"]
         return type.randomElement()!
@@ -49,7 +49,7 @@ struct TetrisPiece {
         return allBlocks[index]
     }
     
-    // these are the blocks including their rotated form
+    // these are the block positions in all their rotated forms
     static func getAllBlocks(blockType: String) -> [[BlockPosition]] {
         switch blockType {
         case "I":

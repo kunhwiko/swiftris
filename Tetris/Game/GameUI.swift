@@ -8,16 +8,20 @@
 
 import SwiftUI
 
-// Use observableobject to notify to viewer that changes must be made
+// Use ObservableObject to notify to viewer that changes must be made
 class GameUI : ObservableObject {
     var rows: Int
     var cols: Int
+    var timer : Timer?
+    var prevPos : CGPoint?
     
-    // "grid" is a 20x10 tetris board that will fill with blocks
+    // "grid" is a 20x10 tetris board filled with the block data structure
     // Use published to get the latest updated value
-    // TetrisPiece might be nil, so we use optionals
     @Published var grid: [[Block]]
+    
+    // TetrisPiece might be nil, so use optionals
     @Published var piece: TetrisPiece?
+    
     var shadow : TetrisPiece? {
         guard var floorShadow = piece else { return nil }
         var testShadow = floorShadow
@@ -28,6 +32,7 @@ class GameUI : ObservableObject {
         return floorShadow
     }
     
+    // "board" is a 20x10 tetris board filled with colors
     var board: [[Block]] {
         var board = grid
         
@@ -44,14 +49,11 @@ class GameUI : ObservableObject {
                     = Block(blockType:piece!.blockType, color:piece!.color)
             }
         }
-        
         return board
     }
     
-    var timer : Timer?
-    var prevPos : CGPoint?
-    var prevAngle : Angle?
     
+    // constructor creates a 20x10 grid and starts the game
     init(rows: Int = 20, cols: Int = 10) {
         self.rows = rows
         self.cols = cols
@@ -73,6 +75,7 @@ class GameUI : ObservableObject {
         
         if piece == nil {
             piece = TetrisPiece.createNewPiece(row: 0, column: cols)
+            // check if the piece can move down
             if isValid(test:piece!) == false {
                 timer.invalidate()
             }
@@ -82,6 +85,7 @@ class GameUI : ObservableObject {
         if movePieceDown() {
             return
         }
+        // check if the piece is on the grid floor 
         isPlaced()
     }
     
@@ -114,6 +118,7 @@ class GameUI : ObservableObject {
     }
     
     
+    // below are functions and gestures for moving tetris pieces
     func movePiece(rowOffset:Int, colOffset:Int) -> Bool{
         // logic without guard statement
         var currPiece : TetrisPiece
@@ -131,12 +136,13 @@ class GameUI : ObservableObject {
         return false
     }
     
-    
+
     func getMouseGesture() -> some Gesture {
         return DragGesture()
         .onChanged(onMouseGesture(value:))
         .onEnded(onMouseEnded(_:))
     }
+    
     
     func onMouseGesture(value: DragGesture.Value) {
         guard let start = prevPos else {
@@ -174,65 +180,34 @@ class GameUI : ObservableObject {
         prevPos = nil
     }
     
+    
     func movePieceDown() -> Bool {
         return movePiece(rowOffset:1, colOffset:0)
     }
+    
     
     func movePieceLeft() -> Bool {
         return movePiece(rowOffset:0, colOffset:-1)
     }
     
+    
     func movePieceRight() -> Bool {
         return movePiece(rowOffset:0, colOffset:1)
     }
+    
     
     func hardDrop() {
         while movePieceDown() {}
     }
     
     
+    // below is a function for rotating tetris pieces
     func rotatePiece(clockwise: Bool) {
         guard let currPiece = piece else {return}
         let rotatePiece = currPiece.rotate(clockwise: clockwise)
         if isValid(test: rotatePiece) {piece = rotatePiece}
     }
 
-    
-    func getRotateGesture() -> some Gesture {
-        let tap = TapGesture()
-            .onEnded(onTapEnded(_:))
-        
-        let rotate = RotationGesture()
-            .onChanged(onRotateGesture(value:))
-            .onEnded(onRotateEnded(value:))
-
-        return tap.simultaneously(with: rotate)
-    }
-    
-    func onTapEnded(_: TapGesture.Value) {
-        rotatePiece(clockwise: true)
-    }
-    
-    func onRotateGesture(value: RotationGesture.Value){
-        guard let start = prevAngle else {
-            prevAngle = value
-            return
-        }
-        
-        let offset = value - start
-        if offset.degrees > 10 {
-            rotatePiece(clockwise: true)
-            prevAngle = value
-            return
-        } else if offset.degrees < -10 {
-            rotatePiece(clockwise: false)
-            prevAngle = value
-            return
-        }
-    }
-    func onRotateEnded(value: RotationGesture.Value){
-        prevAngle = nil
-    }
     
     // Copy a new grid that will remove any filled up rows
     func clearLine() -> Bool {
