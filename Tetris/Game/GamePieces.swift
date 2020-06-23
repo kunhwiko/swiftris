@@ -49,7 +49,7 @@ struct TetrisPiece {
     static func getBlocks(blockType: String, rotation: Int = 0) -> [BlockPosition] {
         let allBlocks = getAllBlocks(blockType: blockType)
         var index = rotation % allBlocks.count
-        if index < 0 {index = allBlocks.count-1}
+        if index < 0 {index += allBlocks.count}
         return allBlocks[index]
     }
     
@@ -119,13 +119,12 @@ struct TetrisPiece {
         }
     }
     
-    
     // wall kicks are essential to rotate pieces when along the walls
     static func getKicks(blockType: String, rotation: Int, clockwise: Bool) -> [BlockPosition] {
         let rotationCount = getBlocks(blockType: blockType).count
         
         var index = rotation % rotationCount
-        if index < 0 {index = rotationCount-1}
+        if index < 0 {index += rotationCount}
         
         var kicks = getAllKicks(blockType: blockType)[index]
         if clockwise == false{
@@ -137,8 +136,6 @@ struct TetrisPiece {
         }
         return kicks
     }
-    
-    
     
     static func getAllKicks(blockType: String) -> [[BlockPosition]] {
         switch blockType {
@@ -166,7 +163,6 @@ struct TetrisPiece {
              ]
          }
     }
-    
     
     static func getColors(blockType: String) -> Color {
         switch blockType {
