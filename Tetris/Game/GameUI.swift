@@ -134,7 +134,7 @@ class GameUI : ObservableObject {
     func getMouseGesture() -> some Gesture {
         return DragGesture()
         .onChanged(onMouseGesture(value:))
-        .onEnded(onMoveEnded(_:))
+        .onEnded(onMouseEnded(_:))
     }
     
     

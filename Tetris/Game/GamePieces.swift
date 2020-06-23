@@ -23,12 +23,13 @@ struct BlockPosition {
 struct TetrisPiece {
     var startPos: BlockPosition
     var blockType : String
-    var color : Color {return TetrisPiece.getColors(blockType: blockType)}
-    var blocks : [BlockPosition] {return TetrisPiece.getBlocks(blockType: blockType)}
+    var color : Color {return TetrisPiece.getColors(blockType: self.blockType)}
+    var blocks : [BlockPosition] {return TetrisPiece.getBlocks(blockType: self.blockType, rotation: self.rotation)}
+    var rotation : Int
     
     func move(row:Int, column:Int) -> TetrisPiece{
         let newPos = BlockPosition(row:startPos.row+row, column:startPos.column+column)
-        return TetrisPiece(startPos:newPos, blockType: blockType)
+        return TetrisPiece(startPos:newPos, blockType: blockType, rotation: 0)
     }
     
     // we make these functions 'functions of the struct' and not 'functions of an instance of struct'
@@ -37,56 +38,76 @@ struct TetrisPiece {
         return type.randomElement()!
     }
     
-    static func getBlocks(blockType: String) -> [BlockPosition] {
+    static func getBlocks(blockType: String, rotation: Int = 0) -> [BlockPosition] {
+        let allBlocks = getAllBlocks(blockType: blockType)
+        var index = rotation % allBlocks.count
+        if index < 0 {index = allBlocks.count-1}
+        return allBlocks[index]
+    }
+    
+    // these are the blocks including their rotated form
+    static func getAllBlocks(blockType: String) -> [[BlockPosition]] {
         switch blockType {
         case "I":
-            return
-                [
-                    BlockPosition(row:0, column:-1),BlockPosition(row:0, column:0),
-                    BlockPosition(row:0, column:1), BlockPosition(row:0, column:2)
-                ]
+            return [[BlockPosition(row: 0, column: -1), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 0, column: 1),  BlockPosition(row: 0, column: 2)],
+                    [BlockPosition(row: -1, column: 1), BlockPosition(row: 0, column: 1),
+                     BlockPosition(row: 1, column: 1),  BlockPosition(row: -2, column: 1)],
+                    [BlockPosition(row: -1, column: -1),BlockPosition(row: -1, column: 0),
+                     BlockPosition(row: -1, column: 1), BlockPosition(row: -1, column: 2)],
+                    [BlockPosition(row: -1, column: 0), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 1, column: 0),  BlockPosition(row: -2, column: 0)]]
         case "O":
-            return
-                [
-                    BlockPosition(row:0, column:0),BlockPosition(row:0, column:1),
-                    BlockPosition(row:1, column:1), BlockPosition(row:1, column:0)
-                ]
+            return [[BlockPosition(row: 0, column: 0), BlockPosition(row: 0, column: 1),
+                     BlockPosition(row: 1, column: 1), BlockPosition(row: 1, column: 0)]]
         case "T":
-            return
-                [
-                    BlockPosition(row:0, column:-1),BlockPosition(row:0, column:0),
-                    BlockPosition(row:0, column:1), BlockPosition(row:1, column:0)
-                ]
+            return [[BlockPosition(row: 0, column: -1), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 0, column: 1),  BlockPosition(row: 1, column: 0)],
+                    [BlockPosition(row: -1, column: 0), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 0, column: 1),  BlockPosition(row: 1, column: 0)],
+                    [BlockPosition(row: 0, column: -1), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 0, column: 1),  BlockPosition(row: -1, column: 0)],
+                    [BlockPosition(row: 0, column: -1), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 1, column: 0),  BlockPosition(row: -1, column: 0)]]
         case "S":
-            return
-                [
-                    BlockPosition(row:0, column:-1),BlockPosition(row:0, column:0),
-                    BlockPosition(row:1, column:0), BlockPosition(row:1, column:1)
-                ]
+            return [[BlockPosition(row: 0, column: -1), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 1, column: 0),  BlockPosition(row: 1, column: 1)],
+                    [BlockPosition(row: 1, column: 0),  BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 0, column: 1),  BlockPosition(row: -1, column: 1)],
+                    [BlockPosition(row: 0, column: 1),  BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: -1, column: 1), BlockPosition(row: -1, column: -1)],
+                    [BlockPosition(row: 1, column: -1), BlockPosition(row: 0, column: -1),
+                     BlockPosition(row: 0, column: 0),  BlockPosition(row: -1, column: 0)]]
         case "Z":
-            return
-                [
-                    BlockPosition(row:-1, column:0),BlockPosition(row:0, column:0),
-                    BlockPosition(row:0, column:-1), BlockPosition(row:-1, column:1)
-                ]
+            return [[BlockPosition(row: 1, column: -1), BlockPosition(row: 1, column: 0),
+                     BlockPosition(row: 0, column: 0),  BlockPosition(row: 0, column: 1)],
+                    [BlockPosition(row: 1, column: 1),  BlockPosition(row: 0, column: 1),
+                     BlockPosition(row: 0, column: 0),  BlockPosition(row: -1, column: 0)],
+                    [BlockPosition(row: 0, column: -1), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: -1, column: 0), BlockPosition(row: -1, column: 1)],
+                    [BlockPosition(row: 1, column: 0),  BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 0, column: -1), BlockPosition(row: -1, column: -1)]]
         case "J":
-            return
-                [
-                    BlockPosition(row:1, column:-1),BlockPosition(row:0, column:-1),
-                    BlockPosition(row:0, column:0), BlockPosition(row:0, column:1)
-                ]
+            return [[BlockPosition(row: 1, column: -1), BlockPosition(row: 0, column: -1),
+                     BlockPosition(row: 0, column: 0),  BlockPosition(row: 0, column: 1)],
+                    [BlockPosition(row: 1, column: 0),  BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: -1, column: 0), BlockPosition(row: 1, column: 1)],
+                    [BlockPosition(row: -1, column: 1), BlockPosition(row: 0, column: -1),
+                     BlockPosition(row: 0, column: 0),  BlockPosition(row: 0, column: 1)],
+                    [BlockPosition(row: 1, column: 0),  BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: -1, column: 0), BlockPosition(row: -1, column: -1)]]
         case "L":
-            return
-                [
-                    BlockPosition(row:0, column:-1),BlockPosition(row:0, column:0),
-                    BlockPosition(row:0, column:1), BlockPosition(row:1, column:1)
-                ]
+            return [[BlockPosition(row: 0, column: -1), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 0, column: 1),  BlockPosition(row: 1, column: 1)],
+                    [BlockPosition(row: 1, column: 0),  BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: -1, column: 0), BlockPosition(row: -1, column: 1)],
+                    [BlockPosition(row: 0, column: -1), BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: 0, column: 1),  BlockPosition(row: -1, column: -1)],
+                    [BlockPosition(row: 1, column: 0),  BlockPosition(row: 0, column: 0),
+                     BlockPosition(row: -1, column: 0), BlockPosition(row: 1, column: -1)]]
         default:
-            return
-                [
-                    BlockPosition(row:0, column:0),BlockPosition(row:0, column:0),
-                    BlockPosition(row:0, column:0), BlockPosition(row:0, column:0)
-                ]
+            return  [[BlockPosition(row: 0, column: 0), BlockPosition(row: 0, column: 0),
+                      BlockPosition(row: 0, column: 0), BlockPosition(row: 0, column: 0)]]
         }
     }
     
@@ -141,7 +162,7 @@ struct TetrisPiece {
         } else {
             origin = BlockPosition(row: 0, column: (column-1)/2)
         }
-        return TetrisPiece(startPos: origin, blockType: blockType)
+        return TetrisPiece(startPos: origin, blockType: blockType, rotation: 0)
     }
 }
 

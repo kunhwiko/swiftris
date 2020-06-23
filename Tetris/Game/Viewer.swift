@@ -25,7 +25,7 @@ struct Viewer: View {
                     GeometryReader { geometry in
                         self.fillGrid(square:geometry.size)
                     }
-                    .gesture(game.getMoveGesture())
+                    .gesture(game.getMouseGesture())
                     GeometryReader { geometry in
                         self.fillStroke(square:geometry.size)
                     }
