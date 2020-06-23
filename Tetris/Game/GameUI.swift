@@ -50,6 +50,7 @@ class GameUI : ObservableObject {
     
     var timer : Timer?
     var prevPos : CGPoint?
+    var prevAngle : Angle?
     
     init(rows: Int = 20, cols: Int = 10) {
         self.rows = rows
@@ -137,7 +138,6 @@ class GameUI : ObservableObject {
         .onEnded(onMouseEnded(_:))
     }
     
-    
     func onMouseGesture(value: DragGesture.Value) {
         guard let start = prevPos else {
             prevPos = value.location
@@ -190,6 +190,49 @@ class GameUI : ObservableObject {
         while movePieceDown() {}
     }
     
+    
+    func rotatePiece(clockwise: Bool) {
+        guard let currPiece = piece else {return}
+        let rotatePiece = currPiece.rotate(clockwise: clockwise)
+        if isValid(test: rotatePiece) {piece = rotatePiece}
+    }
+
+    
+    func getRotateGesture() -> some Gesture {
+        let tap = TapGesture()
+            .onEnded(onTapEnded(_:))
+        
+        let rotate = RotationGesture()
+            .onChanged(onRotateGesture(value:))
+            .onEnded(onRotateEnded(value:))
+
+        return tap.simultaneously(with: rotate)
+    }
+    
+    func onTapEnded(_: TapGesture.Value) {
+        rotatePiece(clockwise: true)
+    }
+    
+    func onRotateGesture(value: RotationGesture.Value){
+        guard let start = prevAngle else {
+            prevAngle = value
+            return
+        }
+        
+        let offset = value - start
+        if offset.degrees > 10 {
+            rotatePiece(clockwise: true)
+            prevAngle = value
+            return
+        } else if offset.degrees < -10 {
+            rotatePiece(clockwise: false)
+            prevAngle = value
+            return
+        }
+    }
+    func onRotateEnded(value: RotationGesture.Value){
+        prevAngle = nil
+    }
     
     // Copy a new grid that will remove any filled up rows
     func clearLine() -> Bool {

@@ -29,7 +29,11 @@ struct TetrisPiece {
     
     func move(row:Int, column:Int) -> TetrisPiece{
         let newPos = BlockPosition(row:startPos.row+row, column:startPos.column+column)
-        return TetrisPiece(startPos:newPos, blockType: blockType, rotation: 0)
+        return TetrisPiece(startPos:newPos, blockType: blockType, rotation: rotation)
+    }
+    
+    func rotate(clockwise: Bool) -> TetrisPiece{
+        return TetrisPiece(startPos: startPos, blockType: blockType, rotation: rotation + (clockwise ? 1: -1))
     }
     
     // we make these functions 'functions of the struct' and not 'functions of an instance of struct'
