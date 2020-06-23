@@ -36,6 +36,10 @@ struct TetrisPiece {
         return TetrisPiece(startPos: startPos, blockType: blockType, rotation: rotation + (clockwise ? 1: -1))
     }
     
+    func kick(clockwise: Bool) -> [BlockPosition]{
+        return TetrisPiece.getKicks(blockType: blockType, rotation: rotation, clockwise: clockwise)
+    }
+    
     // we make the following functions 'functions of the struct' and not 'functions of an instance of struct'
     static func getRandomType() -> String{
         let type = ["I","O","T","S","Z","J","L"]
@@ -114,6 +118,55 @@ struct TetrisPiece {
                       BlockPosition(row: 0, column: 0), BlockPosition(row: 0, column: 0)]]
         }
     }
+    
+    
+    // wall kicks are essential to rotate pieces when along the walls
+    static func getKicks(blockType: String, rotation: Int, clockwise: Bool) -> [BlockPosition] {
+        let rotationCount = getBlocks(blockType: blockType).count
+        
+        var index = rotation % rotationCount
+        if index < 0 {index = rotationCount-1}
+        
+        var kicks = getAllKicks(blockType: blockType)[index]
+        if clockwise == false{
+            var counterKicks: [BlockPosition] = []
+            for kick in kicks {
+                counterKicks.append(BlockPosition(row: -1*kick.row, column: -1*kick.column))
+            }
+            kicks = counterKicks
+        }
+        return kicks
+    }
+    
+    
+    
+    static func getAllKicks(blockType: String) -> [[BlockPosition]] {
+        switch blockType {
+         case "O":
+             return [[BlockPosition(row: 0, column: 0)]]
+         case "I":
+             return [[BlockPosition(row: 0, column: 0),   BlockPosition(row: 0, column: -2),  BlockPosition(row: 0, column: 1),
+                      BlockPosition(row: -1, column: -2), BlockPosition(row: 2, column: -1)],
+                     [BlockPosition(row: 0, column: 0),   BlockPosition(row: 0, column: -1),  BlockPosition(row: 0, column: 2),
+                      BlockPosition(row: 2, column: -1),  BlockPosition(row: -1, column: 2)],
+                     [BlockPosition(row: 0, column: 0),   BlockPosition(row: 0, column: 2),   BlockPosition(row: 0, column: -1),
+                      BlockPosition(row: 1, column: 2),   BlockPosition(row: -2, column: -1)],
+                     [BlockPosition(row: 0, column: 0),   BlockPosition(row: 0, column: 1),   BlockPosition(row: 0, column: -2),
+                      BlockPosition(row: -2, column: 1),  BlockPosition(row: 1, column: -2)]
+             ]
+         default:
+             return [[BlockPosition(row: 0, column: 0),   BlockPosition(row: 0, column: -1),  BlockPosition(row: 1, column: -1),
+                      BlockPosition(row: 0, column: -2),  BlockPosition(row: -2, column: -1)],
+                     [BlockPosition(row: 0, column: 0),   BlockPosition(row: 0, column: 1),   BlockPosition(row: -1, column: 1),
+                      BlockPosition(row: 2, column: 0),   BlockPosition(row: 1, column: 2)],
+                     [BlockPosition(row: 0, column: 0),   BlockPosition(row: 0, column: 1),   BlockPosition(row: 1, column: 1),
+                      BlockPosition(row: -2, column: 0),  BlockPosition(row: -2, column: 1)],
+                     [BlockPosition(row: 0, column: 0),   BlockPosition(row: 0, column: -1),  BlockPosition(row: -1, column: -1),
+                      BlockPosition(row: 2, column: 0),   BlockPosition(row: 2, column: -1)]
+             ]
+         }
+    }
+    
     
     static func getColors(blockType: String) -> Color {
         switch blockType {

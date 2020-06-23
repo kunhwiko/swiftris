@@ -204,8 +204,13 @@ class GameUI : ObservableObject {
     // below is a function for rotating tetris pieces
     func rotatePiece(clockwise: Bool) {
         guard let currPiece = piece else {return}
+        
         let rotatePiece = currPiece.rotate(clockwise: clockwise)
-        if isValid(test: rotatePiece) {piece = rotatePiece}
+        let kicks = currPiece.kick(clockwise: clockwise)
+        for kick in kicks {
+            let newPiece = rotatePiece.move(row: kick.row, column: kick.column)
+            if isValid(test: rotatePiece) {piece = rotatePiece}
+        }
     }
 
     
