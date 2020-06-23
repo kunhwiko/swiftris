@@ -11,7 +11,7 @@ import SwiftUI
 // Block is a single square of a tetris piece
 struct Block {
     var blockType : String
-    var color : Color 
+    var color : Color
 }
 
 struct BlockPosition {
@@ -19,7 +19,7 @@ struct BlockPosition {
     var column:Int
 }
 
-// TetrisPiece is an entire tetromino made of 4 blocks 
+// TetrisPiece is an entire tetromino made of 4 blocks
 struct TetrisPiece {
     var startPos: BlockPosition
     var blockType : String
@@ -93,13 +93,13 @@ struct TetrisPiece {
     static func getColors(blockType: String) -> Color {
         switch blockType {
         case "I":
-            return .customCyan 
+            return .customCyan
         case "O":
             return .yellow
         case "T":
-            return .purple 
+            return .purple
         case "S":
-            return .green 
+            return .green
         case "Z":
             return .red
         case "J":
@@ -123,3 +123,4 @@ struct TetrisPiece {
         return TetrisPiece(startPos: origin, blockType: blockType)
     }
 }
+

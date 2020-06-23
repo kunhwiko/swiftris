@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct Viewer: View {
-    @ObservedObject var game = GameModel()  // Use observedobject to notify that GameUI is being observed for changes
+    @ObservedObject var game = GameUI()  // Use observedobject to notify that GameUI is being observed for changes
     
     var body: some View {
         VStack{
@@ -25,6 +25,7 @@ struct Viewer: View {
                     GeometryReader { geometry in
                         self.fillGrid(square:geometry.size)
                     }
+                    .gesture(game.getMoveGesture())
                     GeometryReader { geometry in
                         self.fillStroke(square:geometry.size)
                     }
@@ -75,3 +76,4 @@ struct Viewer_Previews: PreviewProvider {
         Viewer()
     }
 }
+
