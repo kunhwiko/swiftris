@@ -209,7 +209,10 @@ class GameUI : ObservableObject {
         let kicks = currPiece.kick(clockwise: clockwise)
         for kick in kicks {
             let newPiece = rotatePiece.move(row: kick.row, column: kick.column)
-            if isValid(test: rotatePiece) {piece = rotatePiece}
+            if isValid(test: rotatePiece) {
+                piece = newPiece
+                return
+            }
         }
     }
 
