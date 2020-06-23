@@ -13,43 +13,43 @@ class GameUI : ObservableObject {
     var rows: Int
     var cols: Int
     
-    var timer : Timer?
-    var lastMoveLocation : CGPoint?
-    
-    // grid is a 20x10 tetris board that will fill with blocks
+    // "grid" is a 20x10 tetris board that will fill with blocks
     // Use published to get the latest updated value
     // TetrisPiece might be nil, so we use optionals
     @Published var grid: [[Block]]
     @Published var piece: TetrisPiece?
     var shadow : TetrisPiece? {
-        guard var lastShadow = piece else { return nil }
-        var testShadow = lastShadow
+        guard var floorShadow = piece else { return nil }
+        var testShadow = floorShadow
         while isValid(test: testShadow) {
-            lastShadow = testShadow
-            testShadow = lastShadow.move(row: 1, column: 0)
+            floorShadow = testShadow
+            testShadow = floorShadow.move(row: 1, column: 0)
         }
-        return lastShadow
+        return floorShadow
     }
     
     var board: [[Block]] {
         var board = grid
         
-        if let shadow = shadow {
-            for blockLocation in shadow.blocks {
-                board[blockLocation.row + shadow.startPos.row][blockLocation.column + shadow.startPos.column]
-                    = Block(blockType:shadow.blockType, color:getShadowColors(blockType: shadow.blockType))
+        if let shadow = self.shadow {
+            for blockPos in shadow.blocks {
+                board[blockPos.row + shadow.startPos.row][blockPos.column + shadow.startPos.column]
+                    = Block(blockType:shadow.blockType, color:TetrisPiece.getShadowColors(blockType: shadow.blockType))
             }
         }
         
         if piece != nil {
-            for blockLocation in piece!.blocks {
-                board[blockLocation.row + piece!.startPos.row][blockLocation.column + piece!.startPos.column]
+            for blockPos in piece!.blocks {
+                board[blockPos.row + piece!.startPos.row][blockPos.column + piece!.startPos.column]
                     = Block(blockType:piece!.blockType, color:piece!.color)
             }
         }
         
         return board
     }
+    
+    var timer : Timer?
+    var prevPos : CGPoint?
     
     init(rows: Int = 20, cols: Int = 10) {
         self.rows = rows
@@ -60,13 +60,15 @@ class GameUI : ObservableObject {
         startGame()
     }
     
+    
     func startGame() {
         // execute runGame when timer fires
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: runGame)
     }
     
+    
     func runGame(timer: Timer){
-        if clearLine() {return}
+        if clearLine() { return }
         
         if piece == nil {
             piece = TetrisPiece.createNewPiece(row: 0, column: cols)
@@ -82,6 +84,7 @@ class GameUI : ObservableObject {
         isPlaced()
     }
     
+    
     func isValid(test: TetrisPiece) -> Bool {
         for block in test.blocks {
             let row = test.startPos.row + block.row
@@ -91,6 +94,7 @@ class GameUI : ObservableObject {
         }
         return true
     }
+    
     
     func isPlaced() {
         // guard statements allows us to set currPiece = piece unless piece is nil
@@ -107,6 +111,7 @@ class GameUI : ObservableObject {
         }
         piece = nil
     }
+    
     
     func movePiece(rowOffset:Int, colOffset:Int) -> Bool{
         // logic without guard statement
@@ -125,15 +130,17 @@ class GameUI : ObservableObject {
         return false
     }
     
-    func getMoveGesture() -> some Gesture {
+    
+    func getMouseGesture() -> some Gesture {
         return DragGesture()
-        .onChanged(onMoveChanged(value:))
+        .onChanged(onMouseGesture(value:))
         .onEnded(onMoveEnded(_:))
     }
     
-    func onMoveChanged(value: DragGesture.Value) {
-        guard let start = lastMoveLocation else {
-            lastMoveLocation = value.location
+    
+    func onMouseGesture(value: DragGesture.Value) {
+        guard let start = prevPos else {
+            prevPos = value.location
             return
         }
         
@@ -142,28 +149,29 @@ class GameUI : ObservableObject {
         
         if xOffset < -10 {
             let _  = movePieceLeft()
-            lastMoveLocation = value.location
+            prevPos = value.location
             return
         }
         if xOffset > 10 {
             let _  = movePieceRight()
-            lastMoveLocation = value.location
+            prevPos = value.location
             return
         }
         if yOffset < -10 {
             hardDrop()
-            lastMoveLocation = value.location
+            prevPos = value.location
             return
         }
         if yOffset > 10 {
             let _ = movePieceDown()
-            lastMoveLocation = value.location
+            prevPos = value.location
             return
         }
     }
     
-    func onMoveEnded(_: DragGesture.Value) {
-        lastMoveLocation = nil
+    
+    func onMouseEnded(_: DragGesture.Value) {
+        prevPos = nil
     }
     
     func movePieceDown() -> Bool {
@@ -182,51 +190,35 @@ class GameUI : ObservableObject {
         while movePieceDown() {}
     }
     
+    
+    // Copy a new grid that will remove any filled up rows
     func clearLine() -> Bool {
         var newGrid = Array(repeating: Array(repeating: Block(blockType: "X", color: Color.customBoardColor), count: cols), count:rows)
-        var updated = false
-        var nextRowToCopy = 0
+        var lineWasCleared = false
+        var rowToCopy = 19
         
         for row in 0...rows-1 {
             var clearLine = true
             for col in 0...cols-1 {
-                clearLine = clearLine && grid[row][col].blockType != "X"
+                if grid[19-row][col].blockType == "X" {clearLine = false}
             }
             
             if clearLine == false {
                 for col in 0...cols-1 {
-                    newGrid[nextRowToCopy][col] = grid[row][col]
+                    newGrid[rowToCopy][col] = grid[19-row][col]
                 }
-                nextRowToCopy += 1
+                rowToCopy -= 1
             }
-            updated = updated || clearLine
+            
+            if clearLine == true {
+                lineWasCleared = true
+            }
         }
         
-        if updated {
+        if lineWasCleared {
             grid = newGrid
         }
-        return updated
-    }
-    
-    func getShadowColors(blockType: String) -> Color {
-        switch blockType {
-        case "I":
-            return .customShadowCyan
-        case "O":
-            return .customShadowYellow
-        case "T":
-            return .customShadowPurple
-        case "S":
-            return .customShadowGreen
-        case "Z":
-            return .customShadowRed
-        case "J":
-            return .customShadowBlue
-        case "L":
-            return .customShadowOrange
-        default:
-            return .customBoardColor
-        }
+        return lineWasCleared
     }
 }
 

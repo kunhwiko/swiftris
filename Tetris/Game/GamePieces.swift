@@ -111,6 +111,27 @@ struct TetrisPiece {
         }
     }
     
+    static func getShadowColors(blockType: String) -> Color {
+        switch blockType {
+        case "I":
+            return .customShadowCyan
+        case "O":
+            return .customShadowYellow
+        case "T":
+            return .customShadowPurple
+        case "S":
+            return .customShadowGreen
+        case "Z":
+            return .customShadowRed
+        case "J":
+            return .customShadowBlue
+        case "L":
+            return .customShadowOrange
+        default:
+            return .customBoardColor
+        }
+    }
+    
     static func createNewPiece(row: Int, column: Int) -> TetrisPiece {
         let blockType = getRandomType()
         var origin:BlockPosition
