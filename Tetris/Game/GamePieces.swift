@@ -33,7 +33,7 @@ struct TetrisPiece {
     }
     
     func rotate(clockwise: Bool) -> TetrisPiece{
-        return TetrisPiece(startPos: startPos, blockType: blockType, rotation: rotation + (clockwise ? 1: -1))
+        return TetrisPiece(startPos: startPos, blockType: blockType, rotation: rotation + (clockwise ? -1: 1))
     }
     
     func kick(clockwise: Bool) -> [BlockPosition]{
