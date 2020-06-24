@@ -121,7 +121,7 @@ struct TetrisPiece {
     
     // wall kicks are essential to rotate pieces when along the walls
     static func getKicks(blockType: String, rotation: Int, clockwise: Bool) -> [BlockPosition] {
-        let rotationCount = getBlocks(blockType: blockType).count
+        let rotationCount = getAllBlocks(blockType: blockType).count
         
         var index = rotation % rotationCount
         if index < 0 {index += rotationCount}
