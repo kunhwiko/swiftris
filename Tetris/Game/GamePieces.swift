@@ -92,7 +92,7 @@ struct TetrisPiece {
                     [BlockPosition(row: 1, column: 0),  BlockPosition(row: 0, column: 0),
                      BlockPosition(row: 0, column: 1),  BlockPosition(row: -1, column: 1)],
                     [BlockPosition(row: 0, column: 1),  BlockPosition(row: 0, column: 0),
-                     BlockPosition(row: -1, column: 1), BlockPosition(row: -1, column: -1)],
+                     BlockPosition(row: -1, column: 0), BlockPosition(row: -1, column: -1)],
                     [BlockPosition(row: 1, column: -1), BlockPosition(row: 0, column: -1),
                      BlockPosition(row: 0, column: 0),  BlockPosition(row: -1, column: 0)]]
         case "J":
