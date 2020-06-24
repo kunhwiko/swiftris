@@ -82,9 +82,7 @@ class GameUI : ObservableObject {
             return
         }
         
-        if movePieceDown() {
-            return
-        }
+        if movePieceDown() { return }
         // check if the piece is on the grid floor 
         isPlaced()
     }
@@ -109,9 +107,7 @@ class GameUI : ObservableObject {
         for block in currPiece.blocks {
             let row = currPiece.startPos.row + block.row
             let column = currPiece.startPos.column + block.column
-            if row < 0 || row >= rows || column < 0 || column >= cols {
-                continue
-            }
+            if row < 0 || row >= rows || column < 0 || column >= cols { continue }
             grid[row][column] = Block(blockType : currPiece.blockType, color: currPiece.color)
         }
         piece = nil
