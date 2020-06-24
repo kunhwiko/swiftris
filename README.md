@@ -14,7 +14,7 @@ Welcome to Swiftris (Tetris written in Swift)! This game has many familiar featu
 
 ### Rules 
 -----
-
+![](Tetris/Images/Instructions.png)
 
 ### Compile / Run
 -----
