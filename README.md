@@ -25,4 +25,15 @@ The simplest way to run Swift programs on MacOS is to download XCode. Make sure 
 * ColorUI.swift 
   * Holds custom colors of the board and the different Tetrominos 
   
+* GamePieces.swift 
+  * File with structures and classes that define Tetromino properties  
+  
+* GameUI.swift 
+  * This file instantiates the board, and is the heart of the Tetris game
+  * Makes pieces falling down, left/right movements, and rotations possible. 
+
+* Viewer.swift / ContentView.swift 
+  * Defines the layout on an iOS device screen
+  
+  
   
