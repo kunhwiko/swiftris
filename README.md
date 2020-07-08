@@ -3,13 +3,13 @@
 -----
 Welcome to Swiftris (Tetris written in Swift)! This game has many familiar features such as :
 
-* 20x10 Tetris board and 7 differently colored Tetrominos
+* 20x10 Tetris board and 7 differently colored Tetrominos (may configure to a different board size)
 
 * Line is cleared from the board once an entire row is filled 
 
-* Yes, there are wall kicks!
+* Wall kick features available!
 
-* Additional features such as scores, levels, floor kicks, T-spins, and most importantly, music may be implemented in the future 
+* Additional features such as scores, levels, floor kicks, T-spins, and most importantly, music to be implemented in the future 
 
 
 ### Rules 
