@@ -41,5 +41,3 @@ The simplest way to run Swift programs on MacOS is to download XCode. Make sure 
 I referenced additional details such as Tetromino names, shadow colors, or wall kicks using https://tetris.fandom.com/wiki/Tetris_Wiki. If you are not familiar with Tetris, feel free to read up the instructions from this page. 
 
 I would also like to add that I have referenced https://www.youtube.com/channel/UCsgr7nAvsNLvUybqIJp3ySA to learn more about building Swiftris. I definitely recommend the channel for programmers who are new to Swift.
-  
-### Additional
